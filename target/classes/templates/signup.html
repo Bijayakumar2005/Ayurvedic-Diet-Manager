@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Sign Up - Ayurvedic Diet Manager</title>
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="auth-container">
+            <div class="overlay"></div>
+            <div class="signup-container">
+                <button class="back-arrow" onclick="window.location.href='/'" aria-label="Back to Home">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 5l-7 7 7 7"/>
+                    </svg>
+                </button>
+                <img th:src="@{/images/logo.png}" alt="Ayurveda Logo" />
+                <h2>Create Account</h2>
+                
+                <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+                
+                <form th:action="@{/signup}" th:object="${user}" method="post">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" th:field="*{name}" required />
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" th:field="*{email}" required />
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role" th:field="*{role}" required>
+                            <option value="">Select Role</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" th:field="*{password}" required />
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required />
+                    </div>
+                    <button type="submit" class="btn">Sign Up</button>
+                    <div class="extra-links">
+                        <p>Already have an account? <a th:href="@{/login}">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

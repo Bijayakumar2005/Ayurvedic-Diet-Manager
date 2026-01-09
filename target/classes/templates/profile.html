@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Profile - Ayurvedic Diet Manager</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="card" role="region" aria-label="Profile card">
+                <!-- Left: Photo -->
+                <div class="profile-photo" aria-hidden="false">
+                    <div class="photo-box" id="photoBox" aria-label="Profile photo container">
+                        <img id="profileImg" th:src="${user.photoUrl} ? @{'/uploads/' + ${user.photoUrl}} : 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=60'" alt="Profile photo">
+                    </div>
+
+                    <div class="photo-actions">
+                        <label for="imageFile" class="btn ghost" title="Upload profile photo">Upload Photo</label>
+                        <button id="removePhoto" class="btn ghost" title="Remove photo">Remove</button>
+                    </div>
+
+                    <div style="margin-top:12px;font-size:13px;color:var(--muted)">
+                        Recommended: 1:1 or 4:3 image, max 2 MB.
+                    </div>
+                </div>
+
+                <!-- Right: Form -->
+                <div class="profile-form">
+                    <h2>Your Profile</h2>
+                    <p class="lead">Add or update your personal details.</p>
+                    
+                    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+                    <form th:action="@{/user/profile/update}" th:object="${user}" method="post" enctype="multipart/form-data" autocomplete="off" novalidate>
+                        <input type="hidden" th:field="*{id}" />
+                        <input type="hidden" th:field="*{email}" />
+                        <input type="hidden" th:field="*{password}" />
+                        <input type="hidden" th:field="*{role}" />
+                        <input type="hidden" th:field="*{photoUrl}" />
+                        
+                        <div class="grid">
+                            <div class="form-group">
+                                <label for="fullName">Full name</label>
+                                <input id="fullName" th:field="*{name}" type="text" placeholder="e.g., Dr. Meera Sharma" required>
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="emailDisplay">Email</label>
+                                <input id="emailDisplay" th:value="${user.email}" type="email" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input id="age" th:field="*{age}" type="number" min="0" max="120" placeholder="e.g., 34">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" th:field="*{gender}">
+                                    <option value="">Select gender</option>
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer_not">Prefer not to say</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="weight">Weight (kg)</label>
+                                <input id="weight" th:field="*{weight}" type="number" step="0.1" placeholder="e.g., 68.5">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="height">Height (cm)</label>
+                                <input id="height" th:field="*{height}" type="number" step="0.1" placeholder="e.g., 172">
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label for="notes">Notes (medical history / digestion / dosha)</label>
+                                <textarea id="notes" th:field="*{notes}" rows="3" placeholder="Optional: e.g., weak digestion, Pitta dominant"></textarea>
+                            </div>
+                            
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label for="imageFile">Profile Photo</label>
+                                <input type="file" id="imageFile" name="imageFile" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button id="saveBtn" type="submit" class="btn">Save Profile</button>
+                            <button id="deleteBtn" type="button" class="btn danger" onclick="confirmDelete()">Delete Account</button>
+                            <div class="small" id="statusMsg" aria-live="polite" style="margin-left:auto"></div>
+                        </div>
+                    </form>
+                    
+                    <form id="deleteForm" th:action="@{/user/profile/delete}" method="post" style="display: none;"></form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div layout:fragment="scripts">
+        <script>
+            function confirmDelete() {
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    document.getElementById('deleteForm').submit();
+                }
+            }
+            
+            // Handle image preview
+            document.getElementById('imageFile').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImg').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Handle remove photo button
+            document.getElementById('removePhoto').addEventListener('click', function() {
+                if (confirm('Remove profile photo?')) {
+                    document.getElementById('profileImg').src = 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=60';
+                    // In a real application, you would send a request to remove the photo
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

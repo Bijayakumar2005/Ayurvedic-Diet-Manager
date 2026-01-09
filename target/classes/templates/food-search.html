@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Food Search - Ayurvedic Diet Manager</title>
+    <style>
+        .food-search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .search-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-header h1 {
+            color: #2e5235;
+            margin-bottom: 10px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .search-button {
+            padding: 12px 24px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .search-button:hover {
+            background: #388e3c;
+        }
+        
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category-button {
+            padding: 8px 16px;
+            background: #f3f8f4;
+            color: #2e5235;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .food-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .category-button:hover, .category-button.active {
+            background: #2e5235;
+            color: white;
+        }
+        
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .food-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .food-card h3 {
+            color: #2e5235;
+            margin-bottom: 10px;
+        }
+        
+        .food-category {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e5235;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .food-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .food-properties {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .property-tag {
+            background: #f3f8f4;
+            color: #2e5235;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .view-details-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .view-details-btn:hover {
+            background: #388e3c;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="food-search-container">
+            <div class="search-header">
+                <h1>Food Nutritional Database</h1>
+                <p>Search for foods to view their nutritional values and Ayurvedic properties</p>
+            </div>
+            
+            <form th:action="@{/food/search}" method="get" class="search-form">
+                <input type="text" name="query" th:value="${searchQuery}" 
+                       placeholder="Search foods by name, category, or properties..." class="search-input">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+            
+            <div class="category-filter">
+                <a th:href="@{/food/search}" class="category-button" 
+                   th:classappend="${selectedCategory == null} ? 'active' : ''">All Foods</a>
+                <a th:each="category : ${categories}" 
+                   th:href="@{'/food/search?category=' + ${category}}" 
+                   class="category-button"
+                   th:classappend="${selectedCategory == category} ? 'active' : ''"
+                   th:text="${category}">Category</a>
+            </div>
+            
+            <div th:if="${foods != null and !foods.empty}">
+                <h3 th:text="'Found ' + ${foods.size()} + ' food items'"></h3>
+                
+                <div class="food-grid">
+                    <a th:each="food : ${foods}" th:href="@{'/food/detail/' + ${food.id}}" class="food-card">
+                        <span class="food-category" th:text="${food.category}"></span>
+                        <h3 th:text="${food.name}"></h3>
+                        <p class="food-description" th:text="${food.description}"></p>
+                        
+                        <div class="food-properties">
+                            <span class="property-tag" th:text="'Calories: ' + ${food.calories} + ' kcal'"></span>
+                            <span class="property-tag" th:text="'Dosha: ' + ${food.dosha}"></span>
+                        </div>
+                        
+                        <span class="view-details-btn">View Details</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div th:if="${foods != null and foods.empty}" class="no-results">
+                <h3>No foods found</h3>
+                <p>Try a different search term or browse by category</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

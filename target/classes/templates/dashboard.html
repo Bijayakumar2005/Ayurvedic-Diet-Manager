@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Dashboard - Ayurvedic Diet Manager</title>
+    <style>
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            text-align: center;
+            transition: transform .2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="dashboard-container">
+            <h1>Welcome, <span th:text="${session.user.name}">User</span>!</h1>
+            <p th:text="'You are logged in as a ' + ${session.user.role}"></p>
+            <div class="dashboard-options">
+                <a th:href="@{/food/search}" class="dashboard-card">
+                    <img src="https://img.icons8.com/ios-filled/100/4caf50/apple.png" alt="Food Database">
+                    <h3>Food Database</h3>
+                    <p>Explore Ayurvedic food properties and nutritional values</p>
+                </a>
+                <a th:href="@{/practitioners}" class="dashboard-card">
+                    <img src="https://img.icons8.com/ios-filled/100/4caf50/doctor-male.png" alt="Consultation">
+                    <h3>Consultations</h3>
+                    <p th:if="${session.user.role == 'patient'}">Book consultations with Ayurvedic doctors</p>
+                    <p th:if="${session.user.role == 'doctor'}">Manage your patient consultations</p>
+                </a>
+                <div class="dashboard-card" onclick="location.href='/diet-plan/create'">
+                    <img src="https://img.icons8.com/ios-filled/100/4caf50/meal.png" alt="Diet Plan">
+                    <h3>Diet Plans</h3>
+                    <p>Create and manage personalized Ayurvedic diet plans</p>
+                </div>
+                <a th:href="@{/user/profile}" class="dashboard-card">
+                    <img src="https://img.icons8.com/ios-filled/100/4caf50/user.png" alt="Profile">
+                    <h3>My Profile</h3>
+                    <p>View and edit your profile information</p>
+                </a>
+            </div>
+        </div>
+    </div>
+   
+   
+</body>
+</html>

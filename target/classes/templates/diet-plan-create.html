@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Create Diet Plan - Ayurvedic Diet Manager</title>
+    <style>
+        .diet-plan-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            color: #2e5235;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #2e5235;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            padding: 12px 24px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: #388e3c;
+        }
+        
+        .info-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="diet-plan-container">
+            <h1>Create Personalized Diet Plan</h1>
+            
+            <div class="info-box">
+                <p>Our AI-assisted system will create an Ayurvedic diet plan tailored to your dosha type, health goals, and preferences.</p>
+            </div>
+            
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+            
+            <form th:action="@{/diet-plan/generate}" method="post" class="form-section">
+                <div class="form-group">
+                    <label for="healthGoals">Health Goals *</label>
+                    <input type="text" id="healthGoals" name="healthGoals" required 
+                           placeholder="e.g., Weight loss, Better digestion, More energy">
+                </div>
+                
+                <div class="form-group">
+                    <label for="dietType">Diet Type *</label>
+                    <select id="dietType" name="dietType" required>
+                        <option value="">Select Diet Type</option>
+                        <option value="Vegetarian">Vegetarian</option>
+                        <option value="Non-vegetarian">Non-vegetarian</option>
+                        <option value="Vegan">Vegan</option>
+                        <option value="Pescatarian">Pescatarian</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="foodPreferences">Food Preferences (optional)</label>
+                    <textarea id="foodPreferences" name="foodPreferences" 
+                              placeholder="e.g., I prefer spicy food, I like sweet fruits, I avoid dairy"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="allergies">Allergies or Intolerances (optional)</label>
+                    <textarea id="allergies" name="allergies" 
+                              placeholder="e.g., Gluten intolerance, Nut allergy, Lactose intolerance"></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Generate Diet Plan</button>
+            </form>
+            
+            <div class="form-section">
+                <h2 class="section-title">How It Works</h2>
+                <p>Our AI system analyzes your profile and preferences to create a personalized Ayurvedic diet plan:</p>
+                <ol>
+                    <li>We determine your primary dosha (Vata, Pitta, or Kapha) based on your body type and characteristics</li>
+                    <li>We select foods that balance your dosha and support your health goals</li>
+                    <li>We create a 7-day meal plan with breakfast, lunch, dinner, and snacks</li>
+                    <li>We provide Ayurvedic recommendations for optimal digestion and well-being</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

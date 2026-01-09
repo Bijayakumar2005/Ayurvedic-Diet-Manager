@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header Fragment</title>
+    <style>
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #2e5235;
+        }
+        
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1001;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: #2e5235;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f3f8f4;
+        }
+        
+        .profile-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .user-name {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #2e5235;
+        }
+        
+        .header-btn a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        /* Chatbot button like others */
+        #chatbot-nav-btn {
+            background-color: #f3f8f4;
+            border: 1px solid #2e5235;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2e5235;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        #chatbot-nav-btn:hover {
+            background-color: #2e5235;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header th:fragment="header">
+        <div class="logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/logo.png}" alt="App Logo">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search foods, recipes, or Ayurveda tips...">
+        </div>
+        <div class="header-buttons">
+            
+            <th:block th:if="${session.user == null}">
+                <button class="header-btn"><a th:href="@{/login}">Login</a></button>
+                <button class="header-btn"><a th:href="@{/signup}">Sign Up</a></button>
+            </th:block>
+            
+            <th:block th:if="${session.user != null}">
+                <button class="header-btn"><a th:href="@{/food/search}">Food Database</a></button>
+                <button class="header-btn"><a th:href="@{/dashboard}">Dashboard</a></button>
+                
+                <!-- Chatbot Button -->
+                <button id="chatbot-nav-btn" onclick="toggleChat()">💬 Chatbot</button>
+                
+                <div class="profile-dropdown">
+                    <span class="user-name" th:text="${session.user.name}"></span>
+                    <img th:src="${session.user.photoUrl} ? @{'/uploads/' + ${session.user.photoUrl}} : 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=60'" 
+                         alt="Profile" class="profile-icon">
+                    <div class="dropdown-content">
+                        <a th:href="@{/user/profile}">My Profile</a>
+                        <a th:href="@{/logout}">Logout</a>
+                    </div>
+                </div>
+            </th:block>
+            
+            <button class="header-btn" id="theme-toggle">Dark Mode</button>
+        </div>
+    </header>
+</body>
+</html>
