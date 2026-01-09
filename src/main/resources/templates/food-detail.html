@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${food.name} + ' - Ayurvedic Diet Manager'">Food Detail</title>
+    <style>
+        .food-detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: #f3f8f4;
+            color: #2e5235;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+        
+        .back-button:hover {
+            background: #e8f5e9;
+        }
+        
+        .back-button svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            fill: #2e5235;
+        }
+        
+        .food-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .food-header h1 {
+            color: #2e5235;
+            margin-bottom: 10px;
+        }
+        
+        .food-category {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e5235;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .food-description {
+            color: #666;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .food-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .nutrition-section, .ayurveda-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 25px;
+        }
+        
+        .section-title {
+            color: #2e5235;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+        
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .nutrition-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nutrition-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .nutrition-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2e5235;
+        }
+        
+        .ayurveda-properties {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .property-row {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .property-label {
+            font-weight: 600;
+            color: #2e5235;
+        }
+        
+        .property-value {
+            background: #f3f8f4;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #2e5235;
+        }
+        
+        .benefits-section, .precautions-section {
+            margin-top: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 25px;
+        }
+        
+        .benefits-list, .precautions-list {
+            padding-left: 20px;
+        }
+        
+        .benefits-list li, .precautions-list li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .benefits-list li {
+            color: #2e5235;
+        }
+        
+        .precautions-list li {
+            color: #d32f2f;
+        }
+        
+        @media (max-width: 768px) {
+            .food-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nutrition-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .nutrition-value, .property-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2e5235;
+        }
+        
+        .empty-value {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="food-detail-container">
+            <a th:href="@{/food/search}" class="back-button">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 5l-7 7 7 7"/>
+                </svg>
+                Back to Search
+            </a>
+            
+            <div class="food-header">
+                <span class="food-category" th:text="${food.category} ?: 'Uncategorized'"></span>
+                <h1 th:text="${food.name} ?: 'Unknown Food'"></h1>
+                <p class="food-description" th:text="${food.description} ?: 'No description available.'"></p>
+            </div>
+            
+            <div class="food-content">
+                <div class="nutrition-section">
+                    <h2 class="section-title">Nutritional Information</h2>
+                    <div class="nutrition-grid">
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Calories</span>
+                            <span class="nutrition-value" th:if="${food.calories != null}" th:text="${food.calories} + ' kcal'"></span>
+                            <span class="nutrition-value empty-value" th:if="${food.calories == null}">Not available</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Protein</span>
+                            <span class="nutrition-value" th:if="${food.protein != null}" th:text="${food.protein} + ' g'"></span>
+                            <span class="nutrition-value empty-value" th:if="${food.protein == null}">Not available</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Carbohydrates</span>
+                            <span class="nutrition-value" th:if="${food.carbohydrates != null}" th:text="${food.carbohydrates} + ' g'"></span>
+                            <span class="nutrition-value empty-value" th:if="${food.carbohydrates == null}">Not available</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Fat</span>
+                            <span class="nutrition-value" th:if="${food.fat != null}" th:text="${food.fat} + ' g'"></span>
+                            <span class="nutrition-value empty-value" th:if="${food.fat == null}">Not available</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label">Fiber</span>
+                            <span class="nutrition-value" th:if="${food.fiber != null}" th:text="${food.fiber} + ' g'"></span>
+                            <span class="nutrition-value empty-value" th:if="${food.fiber == null}">Not available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ayurveda-section">
+                    <h2 class="section-title">Ayurvedic Properties</h2>
+                    <div class="ayurveda-properties">
+                        <div class="property-row">
+                            <span class="property-label">Rasa (Taste):</span>
+                            <span class="property-value" th:if="${food.rasa != null}" th:text="${food.rasa}"></span>
+                            <span class="property-value empty-value" th:if="${food.rasa == null}">Not specified</span>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Virya (Energy):</span>
+                            <span class="property-value" th:if="${food.virya != null}" th:text="${food.virya}"></span>
+                            <span class="property-value empty-value" th:if="${food.virya == null}">Not specified</span>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Vipaka (Effect):</span>
+                            <span class="property-value" th:if="${food.vipaka != null}" th:text="${food.vipaka}"></span>
+                            <span class="property-value empty-value" th:if="${food.vipaka == null}">Not specified</span>
+                        </div>
+                        <div class="property-row">
+                            <span class="property-label">Dosha Effect:</span>
+                            <span class="property-value" th:if="${food.dosha != null}" th:text="${food.dosha}"></span>
+                            <span class="property-value empty-value" th:if="${food.dosha == null}">Not specified</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="benefits-section">
+                <h2 class="section-title">Health Benefits</h2>
+                <ul class="benefits-list" th:if="${food.benefits != null and not #strings.isEmpty(food.benefits)}">
+                    <li th:each="benefit : ${#strings.arraySplit(food.benefits, ',')}" th:text="${benefit}"></li>
+                </ul>
+                <p th:if="${food.benefits == null or #strings.isEmpty(food.benefits)}" class="empty-value">No specific benefits information available.</p>
+            </div>
+            
+            <div class="precautions-section">
+                <h2 class="section-title">Precautions</h2>
+                <ul class="precautions-list" th:if="${food.precautions != null and not #strings.isEmpty(food.precautions)}">
+                    <li th:each="precaution : ${#strings.arraySplit(food.precautions, ',')}" th:text="${precaution}"></li>
+                </ul>
+                <p th:if="${food.precautions == null or #strings.isEmpty(food.precautions)}" class="empty-value">No specific precautions information available.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

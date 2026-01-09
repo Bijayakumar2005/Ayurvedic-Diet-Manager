@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Appointment Successful</title>
+    <style>
+        .success-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            max-width: 600px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        .success-card h2 {
+            color: #4caf50;
+            margin-bottom: 16px;
+        }
+        .success-card p {
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        .success-card a {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .success-card a:hover {
+            background: #43a047;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="success-card">
+        <h2>✅ Appointment Booked Successfully!</h2>
+        <p>Your consultation request has been submitted.  
+           The practitioner will reach out to confirm the appointment.</p>
+
+        <a th:href="@{/practitioners}">Back to Practitioners</a>
+        <a th:href="@{/dashboard}" style="margin-left: 10px;">Go to Dashboard</a>
+    </div>
+</div>
+</body>
+</html>

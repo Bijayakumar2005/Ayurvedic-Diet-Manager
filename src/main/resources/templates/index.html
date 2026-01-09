@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Ayurvedic Diet Manager - Home</title>
+    <style>
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            text-align: center;
+            transition: transform .2s;
+            cursor: pointer;
+            color: var(--text-main);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            text-decoration: none;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero / Main Logo -->
+        <section class="hero">
+            <h1>Welcome to Ayurvedic Diet Manager</h1>
+            <p>
+                A holistic platform integrating modern nutrition with Ayurveda, empowering doctors and patients
+                with personalized diet planning, food insights, and expert consultations.
+            </p>
+        </section>
+
+        <!-- Feature Sections -->
+        <section class="features">
+            <div class="feature-card" >
+                <img th:href="@{/diet-plan}" src="https://img.icons8.com/ios-filled/100/4caf50/meal.png" alt="Diet Plan">
+                <h3>Suggest Diet Plan</h3>
+                <p>Get AI-assisted and Ayurveda-compliant personalized diet charts for every patient.</p>
+            </div>
+            
+            <a th:href="@{/food/search}" class="feature-card">
+                <img src="https://img.icons8.com/ios-filled/100/4caf50/apple.png" alt="Food Search">
+                <h3>Food Nutritional Value</h3>
+                <p>Search foods by name and get complete nutrient data along with Ayurvedic properties.</p>
+            </a>
+            
+            <div class="feature-card" onclick="alert('Redirect to Doctor Consult Page')">
+                <img src="https://img.icons8.com/ios-filled/100/4caf50/doctor-male.png" alt="Doctor Consult">
+                <h3>Consult a Doctor</h3>
+                <p>Connect with Ayurvedic practitioners for expert guidance and treatment plans.</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

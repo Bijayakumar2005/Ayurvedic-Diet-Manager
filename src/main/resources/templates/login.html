@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Ayurvedic Diet Manager - Login</title>
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="auth-container">
+            <div class="overlay"></div>
+            <div class="login-container">
+                <button class="back-arrow" onclick="window.location.href='/'" aria-label="Back to Home">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 5l-7 7 7 7"/>
+                    </svg>
+                </button>
+                <img th:src="@{/images/logo.png}" alt="Ayurveda Logo" />
+                <h2>Ayurvedic Diet Manager</h2>
+                
+                <div th:if="${param.error}" class="alert alert-error">
+                    Invalid email or password.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out.
+                </div>
+                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+                
+                <form th:action="@{/login}" method="post">
+                    <div class="form-group">
+                        <label for="email">Email / Phone</label>
+                        <input type="text" id="email" name="email" placeholder="Enter your email or phone" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <div class="extra-links">
+                        <p><a href="#">Forgot Password?</a></p>
+                        <p>New here? <a th:href="@{/signup}">Sign Up</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

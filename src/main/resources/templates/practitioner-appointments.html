@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${practitioner.name} + ' - Appointments'">Appointments</title>
+    <style>
+        .appointments-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #f4f4f4;
+        }
+        tr:hover {
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="appointments-container">
+        <h2 th:text="'Appointments for ' + ${practitioner.name}">Appointments</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Patient Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Date & Time</th>
+                <th>Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="appt : ${appointments}">
+                <td th:text="${appt.patientName}">John Doe</td>
+                <td th:text="${appt.patientEmail}">john@example.com</td>
+                <td th:text="${appt.patientPhone}">+91-9999999999</td>
+                <td th:text="${#temporals.format(appt.appointmentDateTime, 'dd-MM-yyyy HH:mm')}">
+                    21-09-2025 14:30
+                </td>
+                <td th:text="${appt.notes}">Follow-up</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(appointments)}">
+                <td colspan="5" style="text-align: center;">No appointments yet</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{/dashboard}" style="display:inline-block;margin-top:15px;
+           padding:10px 20px;background:#4caf50;color:white;border-radius:6px;text-decoration:none;">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+</body>
+</html>

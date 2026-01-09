@@ -1,0 +1,39 @@
+package com.ayurdiet.util;
+
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+public class FileUploadUtil {
+    
+    public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
+        Path uploadPath = Paths.get(uploadDir);
+        
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            throw new IOException("Could not save file: " + fileName, ioe);
+        }
+    }
+    
+    public static void deleteFile(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        if (Files.exists(path)) {
+            Files.delete(path);
+        }
+    }
+    
+    public static String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+    }
+}

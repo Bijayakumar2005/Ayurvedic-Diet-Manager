@@ -1,0 +1,26 @@
+package com.ayurdiet.repository;
+
+import com.ayurdiet.model.Food;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public interface FoodRepository extends JpaRepository<Food, Long> {
+    List<Food> findByNameContainingIgnoreCase(String name);
+    List<Food> findByCategoryContainingIgnoreCase(String category);
+    
+    @Query("SELECT f FROM Food f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(f.category) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(f.description) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(f.dosha) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(f.rasa) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(f.virya) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(f.vipaka) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Food> searchFoods(@Param("query") String query);
+    
+    @Query("SELECT DISTINCT f.category FROM Food f ORDER BY f.category")
+    List<String> findAllCategories();
+}

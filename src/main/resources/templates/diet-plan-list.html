@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>My Diet Plans - Ayurvedic Diet Manager</title>
+    <style>
+        .diet-plans-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .create-btn {
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .create-btn:hover {
+            background: #388e3c;
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .plan-name {
+            color: #2e5235;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .plan-meta {
+            margin-bottom: 15px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            fill: #2e5235;
+        }
+        
+        .plan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .view-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .view-btn:hover {
+            background: #388e3c;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: #0b7dda;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            fill: #ccc;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="diet-plans-container">
+            <div class="page-header">
+                <h1>My Diet Plans</h1>
+                <a th:href="@{/diet-plan/create}" class="create-btn">Create New Plan</a>
+            </div>
+            
+            <div th:if="${dietPlans != null and !dietPlans.empty}">
+                <div class="plans-grid">
+                    <div th:each="plan : ${dietPlans}" class="plan-card">
+                        <h3 class="plan-name" th:text="${plan.planName}"></h3>
+                        
+                        <div class="plan-meta">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 002 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                                </svg>
+                                <span th:text="${plan.durationDays} + ' days'"></span>
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                                <span th:text="${plan.primaryDosha} ?: 'Not specified'"></span>
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                                </svg>
+                                <span th:text="${plan.healthGoals} ?: 'No specific goals'"></span>
+                            </div>
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                </svg>
+                                <td th:text="${plan.createdAt != null ? #temporals.format(plan.createdAt, 'MMM dd, yyyy') : 'N/A'}"></td>
+                            </div>
+                        </div>
+                        
+                        <div class="plan-actions">
+                            <a th:href="@{/diet-plan/view/} + ${plan.id}" class="view-btn">View Plan</a>
+                            <a th:href="@{/diet-plan/download/} + ${plan.id}" class="download-btn">Download PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${dietPlans == null or dietPlans.empty}" class="empty-state">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                <h3>No diet plans yet</h3>
+                <p>Create your first personalized Ayurvedic diet plan to get started on your health journey.</p>
+                <a th:href="@{/diet-plan/create}" class="create-btn">Create Your First Plan</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

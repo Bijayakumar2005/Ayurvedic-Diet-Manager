@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${practitioner.name} + ' - Profile'">Practitioner Profile</title>
+    <style>
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 24px;
+            margin: 16px auto;
+            max-width: 700px;
+        }
+        .profile-card h2 {
+            margin-bottom: 8px;
+        }
+        .book-form {
+            margin-top: 24px;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="profile-card">
+        <h2 th:text="${practitioner.name}">Doctor Name</h2>
+        <p><strong>Specialization:</strong> <span th:text="${practitioner.specialization}">Specialization</span></p>
+        <p><strong>Qualifications:</strong> <span th:text="${practitioner.qualifications}">BAMS</span></p>
+        <p><strong>Experience:</strong> <span th:text="${practitioner.experience}">10 years</span> years</p>
+        <p><strong>Consultation Fee:</strong> ₹<span th:text="${practitioner.consultationFee}">500</span></p>
+        <p><strong>Email:</strong> <span th:text="${practitioner.email}">doctor@email.com</span></p>
+        <p><strong>Phone:</strong> <span th:text="${practitioner.phone}">+91-9999999999</span></p>
+        <p><strong>Bio:</strong> <span th:text="${practitioner.bio}">Doctor bio here</span></p>
+<div th:if="${session.user.role == 'doctor'}" style="margin-top:20px;">
+    <a th:href="@{'/practitioners/' + ${practitioner.id} + '/appointments'}"
+       style="display:inline-block;padding:10px 20px;background:#2196f3;
+              color:white;border-radius:6px;text-decoration:none;">
+        View My Appointments
+    </a>
+</div>
+
+        <!-- Appointment Booking Form -->
+        <div th:if="${session.user.role != 'doctor'}" class="book-form" >
+            <h3>Book a Consultation</h3>
+            <form th:action="@{'/practitioners/' + ${practitioner.id} + '/book'}" method="post">
+                <label>Name:</label><br>
+                <input type="text" name="patientName" required><br><br>
+
+                <label>Email:</label><br>
+                <input type="email" name="patientEmail" required><br><br>
+
+                <label>Phone:</label><br>
+                <input type="text" name="patientPhone" required><br><br>
+
+                <label>Preferred Date & Time:</label><br>
+                <input type="datetime-local" name="appointmentDateTime" required><br><br>
+
+                <label>Notes:</label><br>
+                <textarea name="notes" rows="3"></textarea><br><br>
+
+                <button type="submit">Book Appointment</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
